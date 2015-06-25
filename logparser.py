@@ -229,24 +229,12 @@ class TilingLogParser(object):
       self._parseRegion(prog, line, 'puInvalid')
       return
 
-    matched = re.match(self.patterns['puOldValid'], line)
-    if matched:
-      layer = matched.group('layer')
-      print resolution + ' pu old valid region - layer = ' + layer
-      layer = session.getLayer(layer)
-      prog = layer[resolution][len(layer[resolution]) - 1]
-      self._parseRegion(prog, line, 'puOldValid')
+    if self._readPULog(session, line, 'puInvalid', resolution) == True:
       return
-
-    matched = re.match(self.patterns['puPaintRegion'], line)
-    if matched:
-      layer = matched.group('layer')
-      print resolution + ' pu paint - layer = ' + layer
-      layer = session.getLayer(layer)
-      prog = layer[resolution][len(layer[resolution]) - 1]
-      self._parseRegion(prog, line, 'puPaintRegion')
+    if self._readPULog(session, line, 'puOldValid', resolution) == True:
       return
-    
+    if self._readPULog(session, line, 'puPaintRegion', resolution) == True:
+      return
     if self._readPULog(session, line, 'puFinalValid', resolution) == True:
       return
     if self._readPULog(session, line, 'puFinalInvalid', resolution) == True:
