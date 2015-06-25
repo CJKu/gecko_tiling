@@ -209,6 +209,7 @@ class TilingLogParser(object):
 
   def _progressiveUpdate(self, session, line):
     resolution = ('High' if self.highResolution else 'Low')
+
     # puValid is the 1st log in ProgressiveUpaate.
     matched = re.match(self.patterns['puValid'], line)
     if matched:
@@ -218,15 +219,6 @@ class TilingLogParser(object):
       layer[resolution].append({})
       prog = layer[resolution][len(layer[resolution]) - 1]
       self._parseRegion(prog, line, 'puValid')
-      return
-
-    matched = re.match(self.patterns['puInvalid'], line)
-    if matched:
-      layer = matched.group('layer')
-      print resolution + ' pu invalid region - layer = ' + layer
-      layer = session.getLayer(layer)
-      prog = layer[resolution][len(layer[resolution]) - 1]
-      self._parseRegion(prog, line, 'puInvalid')
       return
 
     if self._readPULog(session, line, 'puInvalid', resolution) == True:
